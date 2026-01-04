@@ -1,12 +1,15 @@
+import logging
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 from app.services.file_utils import extract_text_from_pdf, transcribe_audio
-from app.services.llm_client import generate_mindmap
+from app.services.llm_client import generate_mindmap, generate_summary
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
 @router.post("/process-file")
 async def process_file(
-    model: str = Form("mistralai/mistral-7b-instruct:free"),
+    model: str = Form("nvidia/nemotron-3-nano-30b-a3b:free"),
     pdf_file: UploadFile = File(None),
     audio_file: UploadFile = File(None),
     prompt: str = Form(None),
@@ -23,7 +26,10 @@ async def process_file(
             raise HTTPException(status_code=400, detail="No input provided")
 
         markdown = generate_mindmap(text, model=model)
-        return {"markdown": markdown}
+        summary = generate_summary(text, model=model)
+        return {"markdown": markdown, "model_summary": summary}
 
     except Exception as e:
+        # Log full traceback server-side for easier debugging
+        logger.exception("process_file failed")
         raise HTTPException(status_code=500, detail=str(e))
