@@ -22,9 +22,7 @@ ALLOWED_AUDIO_TYPES = {
 }
 
 
-async def _read_and_validate(
-    upload: UploadFile, allowed_types: set[str], kind: str
-) -> bytes:
+async def _read_and_validate(upload: UploadFile, allowed_types: set[str], kind: str) -> bytes:
     if upload.content_type not in allowed_types:
         raise HTTPException(
             status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
@@ -71,9 +69,7 @@ async def process_file(
         pdf_bytes = await _read_and_validate(pdf_file, ALLOWED_PDF_TYPES, "PDF")
         text = extract_text_from_pdf(pdf_bytes)
     elif audio_file:
-        audio_bytes = await _read_and_validate(
-            audio_file, ALLOWED_AUDIO_TYPES, "audio"
-        )
+        audio_bytes = await _read_and_validate(audio_file, ALLOWED_AUDIO_TYPES, "audio")
         suffix = os.path.splitext(audio_file.filename or "")[1] or ".wav"
         text = transcribe_audio(audio_bytes, suffix=suffix)
     elif prompt:
