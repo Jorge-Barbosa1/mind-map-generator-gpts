@@ -19,4 +19,4 @@ class Settings(BaseSettings):
         return self.max_file_size_mb * 1024 * 1024
 
 
-settings = Settings()
+settings = Settings()  # type: ignore[call-arg]  # fields populated from env/.env
