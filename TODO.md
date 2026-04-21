@@ -33,7 +33,7 @@ Legenda: `[ ]` por fazer · `[x]` feito · 🔴 crítico · 🟡 importante · �
 - [x] `README.md` na raiz: o que é, stack, como correr localmente, variáveis de ambiente, diagrama de arquitetura.
 - [x] `backend/README.md`: endpoints, payloads, códigos de erro, modelos suportados, como adicionar novo provider.
 - [x] Substituir `frontend/README.md` (antes era o template do CRA).
-- [ ] Documentar endpoints via OpenAPI — tipar responses com Pydantic (ex. `ProcessResponse`) para o `/docs` ficar útil.
+- [x] Documentar endpoints via OpenAPI — `ProcessResponse` / `ErrorResponse` em `app/models/schemas.py`, `response_model` e dict de `responses` no router.
 
 ### Tooling
 - [x] Backend: `ruff` (lint + format) e `mypy` configurados em `backend/pyproject.toml`; `backend/requirements-dev.txt` criado.

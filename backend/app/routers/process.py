@@ -3,6 +3,7 @@ import os
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile, status
 
 from app.config import settings
+from app.models.schemas import ErrorResponse, ProcessResponse
 from app.services.file_utils import extract_text_from_pdf, transcribe_audio
 from app.services.llm_client import generate_mindmap
 
@@ -43,13 +44,29 @@ async def _read_and_validate(
     return data
 
 
-@router.post("/process-file")
+@router.post(
+    "/process-file",
+    response_model=ProcessResponse,
+    summary="Generate a Markdown mind map from a PDF, audio file, or prompt",
+    responses={
+        400: {"model": ErrorResponse, "description": "No input / empty prompt / prompt too long"},
+        413: {"model": ErrorResponse, "description": "File exceeds size limit"},
+        415: {"model": ErrorResponse, "description": "Unsupported file MIME type"},
+        422: {"model": ErrorResponse, "description": "Could not extract any text"},
+        500: {"model": ErrorResponse, "description": "Upstream LLM or processing error"},
+    },
+)
 async def process_file(
     model: str = Form("mistralai/mistral-7b-instruct:free"),
     pdf_file: UploadFile | None = File(None),
     audio_file: UploadFile | None = File(None),
     prompt: str | None = Form(None),
-):
+) -> ProcessResponse:
+    """Accepts exactly one of `pdf_file`, `audio_file`, or `prompt`.
+
+    Extracts or transcribes the text, forwards it to the chosen OpenRouter model,
+    and returns the generated Markdown mind map.
+    """
     if pdf_file:
         pdf_bytes = await _read_and_validate(pdf_file, ALLOWED_PDF_TYPES, "PDF")
         text = extract_text_from_pdf(pdf_bytes)
@@ -79,4 +96,4 @@ async def process_file(
         )
 
     markdown = generate_mindmap(text, model=model)
-    return {"markdown": markdown}
+    return ProcessResponse(markdown=markdown)
