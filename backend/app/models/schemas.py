@@ -20,3 +20,10 @@ class ErrorResponse(BaseModel):
     """Standard error payload used by FastAPI's default HTTPException."""
 
     detail: str = Field(..., description="Human-readable error message.")
+
+
+class HealthResponse(BaseModel):
+    """Liveness response returned by GET /healthz."""
+
+    status: str = Field(..., examples=["ok"])
+    version: str = Field(..., examples=["0.1.0"])

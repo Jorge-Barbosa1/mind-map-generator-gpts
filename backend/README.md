@@ -39,6 +39,10 @@ Interactive docs: `http://localhost:8000/docs` (Swagger UI) · `http://localhost
 
 ## API
 
+### `GET /healthz`
+
+Liveness check. Returns `{ "status": "ok", "version": "<APP_VERSION>" }`. No auth, no external calls.
+
 ### `POST /process-file`
 
 Accepts **exactly one** of three input sources (`pdf_file`, `audio_file`, `prompt`). If none is provided, returns 400.
@@ -122,7 +126,7 @@ See `.env.example` in this directory.
 | `FRONTEND_ORIGINS` | `http://localhost:3000` | Comma-separated list of CORS-allowed origins. |
 | `MAX_FILE_SIZE_MB` | `20` | |
 | `MAX_PROMPT_CHARS` | `10000` | |
-| `LLM_TIMEOUT_SECONDS` | `60` | Not yet applied to the actual call (see `TODO.md` Phase 2). |
+| `LLM_TIMEOUT_SECONDS` | `60` | Applied to the OpenRouter client. |
 
 ---
 
@@ -139,6 +143,6 @@ See `.env.example` in this directory.
 ## Known limitations
 
 - Transcription language hard-coded to `en-US` (`file_utils.transcribe_audio`).
-- No retry nor timeout on OpenRouter calls (see `TODO.md` Phase 2).
+- No retry/backoff on OpenRouter calls (timeout is applied — see `TODO.md` Phase 2 for retry).
 - No structured logging.
 - No automated tests.
