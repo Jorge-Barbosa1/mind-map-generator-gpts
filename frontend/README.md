@@ -1,70 +1,92 @@
-# Getting Started with Create React App
+# Frontend — Mind Map Generator
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+React 18 SPA (Create React App) that lets the user submit a PDF, audio file, or text prompt, displays the PDF inline, renders the LLM-generated mind map with [Markmap](https://markmap.js.org/), and exports it as PNG.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## Run
 
-### `npm start`
+```bash
+npm install
+npm start        # http://localhost:3000
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Assumes the backend is running at `http://localhost:8000`. The URL is hard-coded in `src/App.js` — see [Configuration](#configuration) below.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## Scripts
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+| Command | Effect |
+| --- | --- |
+| `npm start` | Dev server with hot reload |
+| `npm run build` | Optimized bundle in `build/` |
+| `npm test` | Jest runner (`*.test.js` files) |
+| `npm run eject` | Irreversible CRA operation (avoid) |
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Structure
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```
+frontend/
+├── public/
+├── src/
+│   ├── App.js         # Main app: layout, state, /process-file fetch
+│   ├── App.css
+│   ├── index.js       # Entry point
+│   └── index.css
+└── package.json
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+For now the whole UI lives in `App.js` (~390 lines). Splitting it into components (e.g. `PromptBar`, `ModelSelector`, `MindMapView`) is planned in `TODO.md` Phase 3.
 
-### `npm run eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Key dependencies
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+| Package | Purpose |
+| --- | --- |
+| `@mui/material` v6, `@mui/icons-material` | UI (buttons, tabs, inputs, tooltips) |
+| `markmap-lib`, `markmap-view` | Turn markdown into an SVG mind map |
+| `@react-pdf-viewer/*` | Embedded PDF viewer (toolbar, thumbnails, search, zoom) |
+| `axios` | HTTP calls to the backend |
+| `html2canvas` | Export the mind map as PNG |
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Configuration
 
-## Learn More
+The backend endpoint is currently hard-coded in `src/App.js`:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```js
+await axios.post("http://localhost:8000/process-file", formData);
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+For production, switch to a `REACT_APP_API_URL` env var (CRA only injects variables with that prefix). Migration tracked in `TODO.md` Phase 1.
 
-### Code Splitting
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Flow
 
-### Analyzing the Bundle Size
+1. User picks a model and submits a PDF, audio, or prompt.
+2. `handleSubmit` (in `App.js`) builds a `FormData` and calls `POST /process-file`.
+3. Backend returns `{ markdown }`.
+4. A `useEffect` converts the markdown with `markmap-lib` and renders the SVG into `svgRef`.
+5. The download button uses `html2canvas` to export the SVG + metadata (model, date/time) as PNG.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+---
 
-### Making a Progressive Web App
+## Known limitations
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- No visible error feedback (only `console.error`) — see `TODO.md` Phase 3.
+- No client-side validation of file size/type before submitting.
+- The "Model Summary" tab receives the field but the backend doesn't populate it yet.
+- No tests beyond the empty CRA-generated `App.test.js`.
+- No mobile/responsive support — the PDF viewer and mind map assume a wide screen.
 
-### Advanced Configuration
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Accessibility
 
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Known gaps: icon-only buttons without `aria-label`, contrast on active tabs, keyboard navigation across tabs. Tracked in `TODO.md` Phase 3.

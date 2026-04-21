@@ -28,10 +28,10 @@ Legenda: `[ ]` por fazer · `[x]` feito · 🔴 crítico · 🟡 importante · �
 > Infra mínima para trabalhar com confiança.
 
 ### Documentação
-- [ ] `README.md` na raiz: o que é, stack, como correr localmente (passo a passo), variáveis de ambiente, arquitetura em 1 diagrama simples.
-- [ ] `backend/README.md`: endpoints, payloads, modelos suportados, como adicionar novo provider.
-- [ ] Substituir `frontend/README.md` (atualmente é o template do CRA).
-- [ ] Documentar endpoints via OpenAPI (FastAPI já expõe `/docs` — garantir que os schemas Pydantic estão corretos e as respostas tipadas).
+- [x] `README.md` na raiz: o que é, stack, como correr localmente, variáveis de ambiente, diagrama de arquitetura.
+- [x] `backend/README.md`: endpoints, payloads, códigos de erro, modelos suportados, como adicionar novo provider.
+- [x] Substituir `frontend/README.md` (antes era o template do CRA).
+- [ ] Documentar endpoints via OpenAPI — tipar responses com Pydantic (ex. `ProcessResponse`) para o `/docs` ficar útil.
 
 ### Tooling
 - [ ] Backend: adicionar `ruff` (lint + format) e `mypy` (type-checking). Config em `pyproject.toml`.
