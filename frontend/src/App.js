@@ -240,9 +240,7 @@ function App() {
               onChange={(e) => setPdfFile(e.target.files[0])}
             />
           </Button>
-          {pdfFile && (
-            <div style={{ marginTop: "5px", fontSize: "0.8rem" }}>{pdfFile.name}</div>
-          )}
+          {pdfFile && <div style={{ marginTop: "5px", fontSize: "0.8rem" }}>{pdfFile.name}</div>}
 
           <Button variant="contained" component="label" fullWidth>
             Submeter Áudio
