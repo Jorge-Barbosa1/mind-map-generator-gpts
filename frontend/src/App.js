@@ -28,11 +28,11 @@ import {
 
 // Available OpenRouter models
 const MODELS = [
-  { id: "x-ai/grok-4-fast:free", name: "Grok 4 Fast (Free)" },
-  { id: "deepseek/deepseek-chat-v3.1:free", name: "DeepSeek Chat v3.1 (Free)" },
-  { id: "meta-llama/llama-3.3-70b-instruct:free", name: "LLaMA 3.3 70B Instruct (Free)" },
-  { id: "mistralai/mistral-small-3.2-24b-instruct:free", name: "Mistral Small 24B (Free)" },
-  { id: "openai/gpt-oss-20b:free", name: "GPT OSS 20B (Free)" },
+  { id: "openrouter/free", name: "OpenRouter Free Router" },
+  { id: "openai/gpt-oss-20b:free", name: "OpenAI GPT-OSS 20B (Free)" },
+  { id: "meta-llama/llama-3.3-70b-instruct:free", name: "Meta Llama 3.3 70B (Free)" },
+  { id: "tencent/hy3:free", name: "Tencent Hy3 (Free)" },
+  { id: "cohere/north-mini-code:free", name: "Cohere North Mini Code (Free)" },
 ];
 
 function PDFViewer({ pdfUrl }) {
