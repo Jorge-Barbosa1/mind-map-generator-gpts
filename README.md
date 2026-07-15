@@ -76,30 +76,43 @@ App: `http://localhost:3000`.
 
 ## Deploying to Render
 
-This repo now includes a [`render.yaml`](render.yaml) blueprint for deploying both services.
-
-### What Render will create
-
-- A Python web service for the FastAPI backend.
-- A static site for the React frontend.
+Use manual service creation in the Render dashboard (works on free tier, no Blueprint required).
 
 ### Required environment variables
 
-- `OPENROUTER_API_KEY` on the backend service.
-- `FRONTEND_ORIGINS` on the backend service, set to your deployed frontend URL.
-- `REACT_APP_API_URL` on the frontend service, set to your deployed backend URL.
+- Backend: `OPENROUTER_API_KEY` (required)
+- Backend: `FRONTEND_ORIGINS` (your deployed frontend URL)
+- Frontend: `REACT_APP_API_URL` (your deployed backend URL)
 
-### Render setup steps
+### Step by step (no Blueprint)
 
 1. Push this repository to GitHub.
-2. In Render, choose **New +** then **Blueprint**.
-3. Connect the repo and select the branch that contains this code.
-4. Render will read `render.yaml` and create both services.
-5. Add your `OPENROUTER_API_KEY` when prompted for the backend service.
-6. After deployment, copy the backend service URL into `REACT_APP_API_URL` if you need to adjust it.
-7. Copy the frontend service URL into `FRONTEND_ORIGINS` on the backend so CORS allows the browser app.
+2. In Render, click **New +** → **Web Service**.
+3. Connect the repo and set:
+      - Name: `mind-map-generator-backend`
+      - Root Directory: `backend`
+      - Runtime: `Python`
+      - Build Command: `pip install -r requirements.txt`
+      - Start Command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+4. Add backend environment variables:
+      - `OPENROUTER_API_KEY` = your key
+      - `FRONTEND_ORIGINS` = temporary value (you will update after frontend deploy)
+      - `MAX_FILE_SIZE_MB` = `20`
+      - `MAX_PROMPT_CHARS` = `10000`
+      - `LLM_TIMEOUT_SECONDS` = `60`
+5. Deploy backend and copy its public URL.
+6. In Render, click **New +** → **Static Site**.
+7. Connect the same repo and set:
+      - Name: `mind-map-generator-frontend`
+      - Root Directory: `frontend`
+      - Build Command: `npm install && npm run build`
+      - Publish Directory: `build`
+8. Add frontend environment variable:
+      - `REACT_APP_API_URL` = backend URL from step 5
+9. Deploy frontend and copy its public URL.
+10. Go back to backend service, set `FRONTEND_ORIGINS` to the frontend URL from step 9, and redeploy backend.
 
-### Manual service settings if you do not use the blueprint
+### Service settings summary
 
 - Backend build command: `pip install -r requirements.txt`
 - Backend start command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
