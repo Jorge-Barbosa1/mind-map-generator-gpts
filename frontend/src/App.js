@@ -82,6 +82,7 @@ function PDFViewer({ pdfUrl }) {
 }
 
 function App() {
+  const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:8000";
   const [markdown, setMarkdown] = useState("");
   const [prompt, setPrompt] = useState("");
   const [pdfFile, setPdfFile] = useState(null);
@@ -188,7 +189,7 @@ function App() {
     if (audioFile) formData.append("audio_file", audioFile);
 
     try {
-      const response = await axios.post("http://localhost:8000/process-file", formData);
+      const response = await axios.post(`${apiUrl}/process-file`, formData);
       setMarkdown(response.data.markdown);
       setModelSummary(response.data.model_summary || "");
     } catch (error) {

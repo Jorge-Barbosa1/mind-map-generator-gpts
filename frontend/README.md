@@ -57,13 +57,13 @@ For now the whole UI lives in `App.js` (~390 lines). Splitting it into component
 
 ## Configuration
 
-The backend endpoint is currently hard-coded in `src/App.js`:
+The backend endpoint is controlled by `REACT_APP_API_URL` in production and falls back to `http://localhost:8000` during local development:
 
 ```js
-await axios.post("http://localhost:8000/process-file", formData);
+await axios.post(`${apiUrl}/process-file`, formData);
 ```
 
-For production, switch to a `REACT_APP_API_URL` env var (CRA only injects variables with that prefix). Migration tracked in `TODO.md` Phase 1.
+For production on Render, set `REACT_APP_API_URL` to your backend service URL.
 
 ---
 

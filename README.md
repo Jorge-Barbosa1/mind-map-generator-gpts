@@ -74,6 +74,44 @@ App: `http://localhost:3000`.
 
 ---
 
+## Deploying to Render
+
+This repo now includes a [`render.yaml`](render.yaml) blueprint for deploying both services.
+
+### What Render will create
+
+- A Python web service for the FastAPI backend.
+- A static site for the React frontend.
+
+### Required environment variables
+
+- `OPENROUTER_API_KEY` on the backend service.
+- `FRONTEND_ORIGINS` on the backend service, set to your deployed frontend URL.
+- `REACT_APP_API_URL` on the frontend service, set to your deployed backend URL.
+
+### Render setup steps
+
+1. Push this repository to GitHub.
+2. In Render, choose **New +** then **Blueprint**.
+3. Connect the repo and select the branch that contains this code.
+4. Render will read `render.yaml` and create both services.
+5. Add your `OPENROUTER_API_KEY` when prompted for the backend service.
+6. After deployment, copy the backend service URL into `REACT_APP_API_URL` if you need to adjust it.
+7. Copy the frontend service URL into `FRONTEND_ORIGINS` on the backend so CORS allows the browser app.
+
+### Manual service settings if you do not use the blueprint
+
+- Backend build command: `pip install -r requirements.txt`
+- Backend start command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+- Frontend build command: `npm install && npm run build`
+- Frontend publish directory: `build`
+
+### Important note
+
+The backend uses audio transcription through `pydub`, so Render must have `ffmpeg` available if you want audio uploads to work.
+
+---
+
 ## Environment variables (backend)
 
 See [`backend/.env.example`](backend/.env.example). Summary:

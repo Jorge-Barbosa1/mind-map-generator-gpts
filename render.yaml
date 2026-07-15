@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: mind-map-generator-backend
+    env: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: FRONTEND_ORIGINS
+        value: https://mind-map-generator-frontend.onrender.com
+      - key: MAX_FILE_SIZE_MB
+        value: "20"
+      - key: MAX_PROMPT_CHARS
+        value: "10000"
+      - key: LLM_TIMEOUT_SECONDS
+        value: "60"
+
+  - type: web
+    name: mind-map-generator-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: build
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://mind-map-generator-backend.onrender.com
