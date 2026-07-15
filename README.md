@@ -81,7 +81,7 @@ Use manual service creation in the Render dashboard (works on free tier, no Blue
 ### Required environment variables
 
 - Backend: `OPENROUTER_API_KEY` (required)
-- Backend: `FRONTEND_ORIGINS` (your deployed frontend URL)
+- Backend: `FRONTEND_ORIGINS` (your deployed frontend URL; for this repo: `https://mind-map-generator-gpts-frontend.onrender.com`)
 - Frontend: `REACT_APP_API_URL` (your deployed backend URL)
 
 ### Step by step (no Blueprint)
@@ -96,7 +96,7 @@ Use manual service creation in the Render dashboard (works on free tier, no Blue
       - Start Command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
 4. Add backend environment variables:
       - `OPENROUTER_API_KEY` = your key
-      - `FRONTEND_ORIGINS` = temporary value (you will update after frontend deploy)
+      - `FRONTEND_ORIGINS` = `http://localhost:3000,https://mind-map-generator-gpts-frontend.onrender.com`
       - `MAX_FILE_SIZE_MB` = `20`
       - `MAX_PROMPT_CHARS` = `10000`
       - `LLM_TIMEOUT_SECONDS` = `60`
@@ -111,6 +111,8 @@ Use manual service creation in the Render dashboard (works on free tier, no Blue
       - `REACT_APP_API_URL` = backend URL from step 5
 9. Deploy frontend and copy its public URL.
 10. Go back to backend service, set `FRONTEND_ORIGINS` to the frontend URL from step 9, and redeploy backend.
+
+If you are using the exact URLs from this repo, the frontend origin should be `https://mind-map-generator-gpts-frontend.onrender.com`.
 
 ### Service settings summary
 

@@ -3,7 +3,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     openrouter_api_key: str
-    frontend_origins: str = "http://localhost:3000"
+    frontend_origins: str = "http://localhost:3000,https://mind-map-generator-gpts-frontend.onrender.com"
     max_file_size_mb: int = 20
     max_prompt_chars: int = 10_000
     llm_timeout_seconds: int = 60
